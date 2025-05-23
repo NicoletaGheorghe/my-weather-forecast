@@ -28,7 +28,7 @@ export default function WeatherDisplay({
   const isToday = (day) => day.date === today;
 
   const handleScroll = (direction) => {
-    setHourStartIndex((prevIndex) => 
+      setHourStartIndex((prevIndex) => 
        getNewHour(prevIndex, direction, hourly.length, currentHourIndex, hoursToShow, maxScrollableHours)) 
   };
 
