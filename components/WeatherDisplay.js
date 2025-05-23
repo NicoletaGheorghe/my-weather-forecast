@@ -120,7 +120,7 @@ export default function WeatherDisplay({
             <div
               className={`grid ${
                 showToday ? "grid-cols-2" : "grid-cols-1"
-              } font-semibold text-zinc-700`}
+              } font-semibold text-zinc-900`}
             >
               <p className={`${showToday ? "text-md" : "text-xs"}`}>
                 Min: {day.min}°C
