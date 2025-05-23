@@ -17,7 +17,7 @@ export default function Home() {
     <main className={`min-h-screen p-12 ${weatherStyles.background} ${weatherStyles.textColor}`}>
       <div className="max-w-7xl mx-auto text-center">
         <h1 className={`text-4xl md:text-5xl font-bold ${weatherStyles.textColor} text-shadow-md shadow-gray-500 mb-4`}>
-         Weekly Weather forecast
+         Weekly Weather Forecast
         </h1>
         <p className={`mb-4 ${weatherStyles.textColor}`}>
           Enter a location
