@@ -12,6 +12,7 @@ export default function WeatherFetcher({onWeatherConditionChange}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [weatherCondition, setWeatherCondition] = useState("");
+  const [timezone, setTimezone] = useState("auto");
 
   const client = new ApiClient();
 
@@ -29,8 +30,12 @@ export default function WeatherFetcher({onWeatherConditionChange}) {
         const weatherRes = await client.getWeather({
           latitude: first.latitude,
           longitude: first.longitude,
+          timezone: first.timezone,
         });
         const data = weatherRes.data;
+        console.log("First hourly timestamp:", data.hourly.time[0]);
+        console.log("Timezone in weather API response:", data.timezone);
+        console.log("Resolved timezone:", first.timezone);
         const forecastArray = data.daily.time.map((date, index) => ({
           date,
           min: data.daily.temperature_2m_min[index],
@@ -40,24 +45,29 @@ export default function WeatherFetcher({onWeatherConditionChange}) {
           code: data.daily.weathercode[index],
           precip: data.daily.precipitation_probability_mean[index],
         }));
-
+     
         setDailyForecast(forecastArray);
-         const hourlyTimes = data.hourly.time.slice(0, 12);
-         const hourlyTemps = data.hourly.temperature_2m.slice(0, 12);
-         const hourlyData = hourlyTimes.map((timeStr, i) => ({
-              time: timeStr,
-              temp: hourlyTemps[i],
-            }));
-        setHourlyTemperature(hourlyData);
+        
+        setTimezone(first.timezone);
+         const tz = data.timezone || first.timezone || 'Europe/Bucharest';
+
+      const hourlyData = data.hourly.time.map((timeStr, i) => ({
+        time: timeStr,
+        temp: data.hourly.temperature_2m[i],
+        code: data.hourly.weathercode[i],
+      }));
+    
+      setHourlyTemperature(hourlyData);
         setCurrentTemperature(data.current.temperature_2m);
         setWeatherCondition(data.daily.weathercode[0]);
-    
+        
       if (onWeatherConditionChange) {
           onWeatherConditionChange(data.daily.weathercode[0]); 
       }
     }
     } catch (error) {
-      setError("Something went wrong. Mistakes happen.");
+      console.error("API request error:", error.response?.data || error.message || error);
+    throw new Error(error.response?.data?.reason || error.message || 'Something went wrong. Mistakes happen.');
     } finally {
       setLoading(false);
     }
@@ -72,7 +82,7 @@ export default function WeatherFetcher({onWeatherConditionChange}) {
     <>
     <div className="flex flex-col">
       {error && <div className="text-red-500">{error}</div>}
-      <div className="flex place-self-center bg-white rounded-md p-2 mb-5 shadow-md shadow-gray-600" >
+      <div className="flex place-self-center bg-gray-100/40 rounded-md p-2 mb-5 shadow-md shadow-gray-600" >
             <input
                 type="text"
                 value={selectedLocation}
@@ -83,12 +93,18 @@ export default function WeatherFetcher({onWeatherConditionChange}) {
             />
             <button onClick={fetchLocation} className="justify-self-end w-8">⌕</button>
          </div>
+         <h2 className="text-xl font-bold">{(selectedLocation.trim() &&  selectedLocation
+              .toLowerCase()
+              .split(" ")
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(" ")) || "London"}
+          </h2>
       <WeatherDisplay
         loading={loading}
         forecast={dailyForecast}
         currentTemperature={currentTemperature}
         hourly={hourlyTemperature}
-        
+        timezone={timezone}
       />
       </div>
     </>
