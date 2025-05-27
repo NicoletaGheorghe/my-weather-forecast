@@ -8,7 +8,7 @@ export default function WeatherFetcher({onWeatherConditionChange}) {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [dailyForecast, setDailyForecast] = useState([]);
   const [hourlyTemperature, setHourlyTemperature] = useState([]);
-  const [currentTemperature, setCurrentTemperature] = useState(null);
+  const [currentTemperature, setCurrentTemperature] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [weatherCondition, setWeatherCondition] = useState("");
@@ -58,7 +58,7 @@ export default function WeatherFetcher({onWeatherConditionChange}) {
       }));
     
       setHourlyTemperature(hourlyData);
-        setCurrentTemperature(data.current.temperature_2m);
+        setCurrentTemperature(data.current.temperature);
         setWeatherCondition(data.daily.weathercode[0]);
         
       if (onWeatherConditionChange) {
