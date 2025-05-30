@@ -35,7 +35,7 @@ How It Works
 
 Live Demo & Code
 
-- Live Demo: [7-Day Weather App](https://weather-app-wine-phi-95.vercel.app/)
+- Live Demo: [Weekly Weather App](https://my-weather-forecast-zeta.vercel.app/)
 - GitHub Repo: [Clone on GitHub](https://github.com/NicoletaGheorghe/my-weather-forecast.git)
 
 ------
